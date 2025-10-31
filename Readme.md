@@ -1,8 +1,29 @@
+
 # Integrating Nginx with OpenTelemetry on Debian
+
+##  1. <a name='TableofContent'></a>Table of Content
+
+<!-- vscode-markdown-toc -->
+* 1. [Table of Content](#TableofContent)
+* 2. [Why Integrate Nginx with OpenTelemetry?](#WhyIntegrateNginxwithOpenTelemetry)
+* 3. [Installation on Debian](#InstallationonDebian)
+	* 3.1. [Prerequisites](#Prerequisites)
+	* 3.2. [Load the Module in Nginx](#LoadtheModuleinNginx)
+* 4. [Configuration](#Configuration)
+	* 4.1. [Global Configuration (`/etc/nginx/nginx.conf`)](#GlobalConfigurationetcnginxnginx.conf)
+	* 4.2. [Server Block Configuration (`/etc/nginx/conf.d/site.conf`)](#ServerBlockConfigurationetcnginxconf.dsite.conf)
+* 5. [Reference](#Reference)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 
 This guide provides a comprehensive overview of why, how to install, and how to configure the Nginx OpenTelemetry (OTEL) module on a Debian-based system. The configuration examples are tailored to send telemetry data directly to an Elastic APM endpoint, enabling end-to-end distributed tracing.
 
-## 1. Why Integrate Nginx with OpenTelemetry?
+##  2. <a name='WhyIntegrateNginxwithOpenTelemetry'></a>Why Integrate Nginx with OpenTelemetry?
 
 Nginx often acts as the entry point for all traffic to your applications (a reverse proxy, API gateway, or load balancer). Instrumenting it is critical for achieving complete visibility into your system's behavior. Without it, you have a significant blind spot.
 
@@ -17,11 +38,11 @@ Output example:
 
 ![alt text](document_elastic_nginx_otel_instrumentation_1.png)
 
-## 2. Installation on Debian
+##  3. <a name='InstallationonDebian'></a>Installation on Debian
 
 The Nginx OTEL module is included in the standard Nginx packages. It must need to be installed along with a working nginx configuration.
 
-### Prerequisites
+###  3.1. <a name='Prerequisites'></a>Prerequisites
 
 First, install the necessary tools for compiling software and the Nginx development dependencies.
 
@@ -30,7 +51,7 @@ sudo apt update
 sudo apt install -y apt install nginx-module-otel
 ```
 
-### Step 2.1: Load the Module in Nginx
+###  3.2. <a name='LoadtheModuleinNginx'></a>Load the Module in Nginx
 
 Finally, edit your main `/etc/nginx/nginx.conf` file to load the new module. This directive must be at the top level, before the `http` block.
 
@@ -55,11 +76,11 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-## 3. Configuration
+##  4. <a name='Configuration'></a>Configuration
 
 Configuration is split between the main `nginx.conf` file (for global settings) and your site-specific server block files.
 
-### Global Configuration (`/etc/nginx/nginx.conf`)
+###  4.1. <a name='GlobalConfigurationetcnginxnginx.conf'></a>Global Configuration (`/etc/nginx/nginx.conf`)
 
 This configuration sets up the destination for your telemetry data and defines global variables used for CORS and tracing. These settings are placed inside the `http` block.
 
@@ -108,7 +129,7 @@ http {
 }
 ```
 
-### Server Block Configuration (`/etc/nginx/conf.d/site.conf`)
+###  4.2. <a name='ServerBlockConfigurationetcnginxconf.dsite.conf'></a>Server Block Configuration (`/etc/nginx/conf.d/site.conf`)
 
 This configuration enables tracing for a specific site, handles CORS preflight requests, and propagates the trace context to the backend service.
 
@@ -168,7 +189,7 @@ server {
 }
 ```
 
-## 4. Reference
+##  5. <a name='Reference'></a>Reference
 
 For more detailed information on all available directives and variables, consult the official documentation for the Nginx OpenTelemetry module.
 
